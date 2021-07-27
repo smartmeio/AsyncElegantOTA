@@ -153,7 +153,12 @@ class AsyncElegantOtaClass{
             #if defined(ESP8266)
                 id = String(ESP.getChipId());
             #elif defined(ESP32)
-                id = String((uint32_t)ESP.getEfuseMac(), HEX);
+                //id = String((uint32_t)ESP.getEfuseMac(), HEX);
+                uint64_t baseMac64 = ESP.getEfuseMac();
+                uint8_t* baseMac = (uint8_t*)&baseMac64;
+                char baseMacChr[18] = {0};
+                sprintf(baseMacChr, "%02X%02X%02X%02X%02X%02X", baseMac[0], baseMac[1], baseMac[2], baseMac[3], baseMac[4], baseMac[5]);
+                id = String(baseMacChr);
             #endif
             id.toUpperCase();
             return id;
